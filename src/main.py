@@ -1,12 +1,11 @@
 import os
-import time
-import json
 import threading
-from flask import Flask, jsonify, render_template
+import time
+from flask import Flask
 import paho.mqtt.client as mqtt
 
-# Import our Hardware Abstraction Layer
 from gps_manager import GPSManager
+from web_server import create_web_server
 
 # --- CONFIGURATION (Loaded from HA Addon Options via Env Vars) ---
 MQTT_HOST = os.getenv("MQTT_HOST", "192.168.1.50")
@@ -85,32 +84,17 @@ def telemetry_loop():
 
         time.sleep(10) # Update every 10 seconds
 
-# --- WEB UI ROUTES ---
-
-@app.route('/')
-def index():
-    """Serves the main dashboard page."""
-    return render_template('index.html')
-
-@app.route('/api/stats')
-def api_stats():
-    if not latest_snapshot:
-        return jsonify({"error": "No GPS data available yet"}), 503
-    
-    # Inject the most recent client list directly into the response
-    latest_snapshot['clients'] = gps_mgr.get_ntp_clients() 
-    return jsonify(latest_snapshot)
-
-
-@app.route('/health')
-def health():
-    """HA Health Check endpoint."""
-    status = "healthy" if latest_snapshot else "warning"
-    return jsonify({"status": status, "uptime": time.time()}), 200
-
 # --- MAIN EXECUTION ---
 
 if __name__ == "__main__":
+
+    # We pass the gps_mgr instance into the web server so it can query hardware
+    web_blueprint = create_web_server(gps_mgr)
+    app.register_blueprint(web_blueprint)
+
+    print("Starting Web Dashboard on port 8080...")
+    app.run(host='0.0.0.0', port=8080, debug=False, threaded=True)
+    
     # 1. Setup MQTT Connection
     try:
         mqtt_client.username_pw_set(MQTT_USER, MQTT_PASS)
