@@ -36,4 +36,9 @@ ports:
   8080/tcp: 8080 # Web UI Dashboard Port
 
 # Security settings
-privileged: true # Required to access GPS hardware and conntrack table for NTP clients
+#privileged: true # Required to access GPS hardware and conntrack table for NTP clients
+priveleged:
+  - SYS_RAWIO
+  - NET_ADMIN
+  - NET_RAW
+  - SYS_ADMIN
