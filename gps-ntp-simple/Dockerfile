@@ -1,26 +1,29 @@
-FROM alpine:latest
+FROM debian:bookworm-slim
 
-# Install gpsd, chrony, bash, AND python3
-# we add python3 specifically because ubxtool is a python script
-RUN apk add --no-cache \
+# Avoid prompts during installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+# python3-gps provides the 'import gps' module that ubxtool needs
+RUN apt-get update && apt-get install -y \
     gpsd \
     gpsd-clients \
     chrony \
     bash \
-    util-linux \
     python3 \
-    py3-pip
+    python3-gps \
+    util-linux \
+    && rm -rf /var/lib/apt/lists/*
 
-# Ensure the system knows where python3 is 
-# Some versions of ubxtool look for /usr/bin/python3 explicitly
-RUN ln -sf /usr/bin/python3 /usr/bin/python
-
-# Create a directory for logs and config
-RUN mkdir -p /etc/chrony && mkdir -p /var/log/gpsntp
+# Create directories for logs and config
+RUN mkdir -p /etc/chrony /var/log/gpsntp
 
 COPY run.sh /run.sh
 COPY chrony.conf.template /etc/chrony.conf.template
 
 RUN chmod +x /run.sh
+
+# Chrony needs a specific user to run as in Debian
+RUN touch /var/lib/chrony && chown chrony:chrony /var/lib/chrony
 
 CMD ["/run.sh"]
