@@ -13,7 +13,7 @@ arch:
 options:
   gps_device:
     description: "USB Device path (e.g., /dev/ttyUSB0 or /dev/ttyACM0)"
-    default: "/dev/ttyUSB0"
+    default: ""
 
 # Hardware access permissions
 devices:
