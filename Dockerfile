@@ -4,7 +4,7 @@ FROM alpine:3.18
 RUN apk add --no-cache \
     gpsd gpsd-clients chrony python3 py3-pip \
     bash gcc musl-dev linux-headers \
-    nano util-linux
+    nano util-linux conntrack-tools
 
 # Install Python requirements
 RUN pip install paho-mqtt flask psutil
