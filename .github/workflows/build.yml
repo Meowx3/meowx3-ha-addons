@@ -1,39 +1,50 @@
-name: Build and Push Addon
-on: 
-  push:
-    branches: [ main ]
+name: Builder
+
+on:
+  release:
+    types: [published]
   workflow_dispatch:
 
-# This solves the Node.js 20 deprecation warning
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
-permissions:
-  contents: read
-  packages: write
-
 jobs:
-  build:
+  init:
+    name: Initialize Build Matrix
     runs-on: ubuntu-latest
+    outputs:
+      architectures: ${{ steps.flags.outputs.architectures }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4 
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Set Lowercase Repo Name
-        id: repo_name
-        run: |
-          echo "REPO_LOWER=$(echo ${{ github.repository }}/gps-ntp-mqtt | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      - name: Determine Architectures
+        id: flags
+        uses: home-assistant/actions/helpers/prepare-multi-arch-matrix@master
+        with:
+          # Targets the current directory or paths where your addons live
+          path: "./"
 
-      - name: Login to GHCR
-        uses: docker/login-action@v3 
+  build:
+    name: Build Add-on
+    needs: init
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        architecture: ${{ Jackson.parse(needs.init.outputs.architectures) }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v6 
+      - name: Build and Push Image
+        uses: home-assistant/actions/helpers/build-image@master
         with:
-          context: .
+          account: ${{ github.repository_owner }}
+          image: "home-assistant-addons"
+          architecture: ${{ matrix.architecture }}
+          path: "./"
           push: true
-          tags: ghcr.io/${{ env.REPO_LOWER }}:latest
