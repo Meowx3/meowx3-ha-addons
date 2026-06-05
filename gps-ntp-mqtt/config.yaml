@@ -5,9 +5,8 @@ slug: "gps-ntp-mqtt"
 arch:
   - aarch64
   - amd64
-  - armv7
 
-git_repository: https://github.com/Meowx3/gps-ntp-mqtt
+#git_repository: https://github.com/Meowx3/gps-ntp-mqtt
 startup: run.sh
 
 # These options appear in the HA Addon Configuration UI panel
@@ -27,8 +26,9 @@ options:
 
 # Hardware access permissions
 devices:
-  - /dev/ttyUSB0:/dev/ttyUSB0
-  - /dev/ttyACM0:/dev/ttyACM0
+  - /dev/ttyUSB0
+  - /dev/ttyACM0
+  - /dev/tty/ACM1
 
 # Network ports to expose from the container to the host
 ports:
