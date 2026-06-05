@@ -1,6 +1,7 @@
 name: "GPS NTP Server"
 version: "1.0.0"
 description: "Offline NTP server using GPSD and Chrony with PPS support"
+slug: "gps-ntp-simple"
 arch:
   - aarch64
   - amd64
