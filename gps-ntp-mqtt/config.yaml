@@ -7,7 +7,7 @@ arch:
   - amd64
 
 #git_repository: https://github.com/Meowx3/gps-ntp-mqtt
-startup: run.sh
+#startup: run.sh
 
 # These options appear in the HA Addon Configuration UI panel
 options:
