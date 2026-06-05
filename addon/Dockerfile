@@ -5,15 +5,14 @@ RUN apk add --no-cache \
     chrony \
     python3 py3-pip \
     mosquitto-clients \
-    udev \
+    udev jq \
     bash \
     socat \
     tzdata \
     build-base
 
-RUN pip install fastapi uvicorn paho-mqtt psutil
+RUN pip install fastapi uvicorn[standard] paho-mqtt psutil
 
 COPY rootfs /
 
-RUN chmod +x /etc/services.d/*/run
-RUN chmod +x /etc/cont-init.d/*
+RUN chmod -R +x /etc/services.d /etc/cont-init.d /usr/bin
