@@ -1,5 +1,9 @@
 name: Build and Push Addon
-on: [push]
+on: 
+  push:
+    branches: [ main ]
+  workflow_dispatch: # <--- Add this line!
+
 jobs:
   build:
     runs-on: ubuntu-latest
