@@ -1,0 +1,26 @@
+name: "GPSD Chrony Gemma4 T1"
+version: "1.0.0"
+slug: "gpsd_chrony_gemma4_t1"
+description: "Reads GPS data from u-blox 7 via gpsd and echoes to shell"
+arch:
+  - amd64
+  - armhf
+  - aarch64
+startup: system
+services:
+  - gpsd:want
+devices:
+  - /dev/ttyACM0:/dev/ttyACM0:rwm
+usb: true
+uart: true
+gpio: false
+init: false
+map:
+  - type: addon_config
+    path: /config/gpsd_chrony_gemma4_t1
+options:
+  device_path: "/dev/ttyACM0"
+  baud_rate: 9600
+schema:
+  device_path: str
+  baud_rate: int
