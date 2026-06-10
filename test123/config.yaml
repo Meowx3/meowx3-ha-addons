@@ -16,4 +16,4 @@ options:
 schema:
   gps_device: "str?"
   baud_rate: "int?"
-image: "ghcr.io/meowx3/test123"
+#image: "ghcr.io/meowx3/test123"
