@@ -3,7 +3,6 @@ version: "1.0.0"
 description: "Echoes GPS data from gpsd to shell"
 arch:
   - aarch64
-  - armv7
   - x86_64
 options:
   device: "/dev/ttyUSB0"
