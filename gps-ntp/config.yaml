@@ -14,4 +14,4 @@ options:
 schema:
   log_level: list(trace|debug|info|notice|warning|error|fatal)
 
-image: https://ghcr.io/meowx3/gps-ntp
+image: "ghcr.io/meowx3/gps-ntp"
