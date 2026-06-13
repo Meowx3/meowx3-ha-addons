@@ -12,12 +12,22 @@ arch:
 panel_icon: mdi:clock
 ports:
   123/udp: 123
+  8080/tcp: 8080
 ports_description:
-  123/udp: NTP Port
+  123/udp: NTP Server Port
+  8080/tcp: Web Dashboard Port
 
 options:
   log_level: info
+  gps_receiver:
+    device: /dev/ttyACM1
+    baudrate: 9600
+    timeout: 10
 schema:
   log_level: list(trace|debug|info|notice|warning|error|fatal)
+  gps_receiver:
+    device: str?
+    baudrate: int?
+    timeout: int?
 
 image: ghcr.io/meowx3/gps-ntp
