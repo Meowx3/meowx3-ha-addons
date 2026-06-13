@@ -1,6 +1,6 @@
 ---
 name: "Hello NTP world"
-description: "My first broken app!"
+description: "My next broken app!"
 version: "1.0.0"
 slug: "hello_world"
 init: false
